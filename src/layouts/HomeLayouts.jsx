@@ -10,7 +10,7 @@ const HomeLayouts = () => {
                 <Navbar/>
 
             </header>
-            <main className="pt-28 min-h-screen">
+            <main className="pt-25 min-h-screen">
                 <Outlet/>
             </main>
             <footer>
