@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router';
 import Navbar from '../components/header/Navbar';
+import Footer from '../components/footer/Footer';
 
 const HomeLayouts = () => {
     return (
@@ -9,11 +10,11 @@ const HomeLayouts = () => {
                 <Navbar/>
 
             </header>
-            <main className="pt-28">
+            <main className="pt-28 min-h-screen">
                 <Outlet/>
             </main>
             <footer>
-                
+                <Footer/>
             </footer>
         </div>
     );
