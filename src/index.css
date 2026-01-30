@@ -1,0 +1,48 @@
+/* DM Sans font */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@import "tailwindcss";
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+
+  --color-primary: #B03052;
+  --color-secondary: #D76C82;
+
+  --color-base-100: #EBE8DB;
+  --color-base-200: #E2DDCF;
+  --color-base-300: #D6D0C0;
+
+  --color-accent: #3D0301;
+  --color-neutral: #6F5E5C;
+
+  --color-success: #C84B6A;
+  --color-warning: #E0A458;
+  --color-error: #9B1C31;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+
+  --color-primary: #D76C82;
+  --color-secondary: #B03052;
+
+  --color-base-100: #1B0706;
+  --color-base-200: #2A0D0B;
+  --color-base-300: #3D0301;
+
+  --color-accent: #EBE8DB;
+  --color-neutral: #B9AFAE;
+
+  --color-success: #E08A9E;
+  --color-warning: #F2B872;
+  --color-error: #E5484D;
+}
+/* Zentaskly */
+
+*{
+    font-family: "DM Sans", sans-serif;
+
+}
