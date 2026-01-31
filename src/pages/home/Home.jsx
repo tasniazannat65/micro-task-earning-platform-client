@@ -4,6 +4,7 @@ import Testimonials from '../../components/home/testimonial_section/Testimonials
 import EarningOpportunities from '../../components/home/earning_section/EarningOpportunities';
 import WalletFlow from '../../components/home/wallet_section/WalletFlow';
 import PlatformFor from '../../components/home/platform_section/PlatformFor';
+import TaskCategories from '../../components/home/task_section/TaskCategories';
 
 const Home = () => {
     return (
@@ -22,6 +23,9 @@ const Home = () => {
             </section>
             <section>
                 <PlatformFor/>
+            </section>
+            <section>
+                <TaskCategories/>
             </section>
             
         </div>
