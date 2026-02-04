@@ -1,14 +1,14 @@
 import { Navigate } from "react-router";
 import useAuth from "../hooks/useAuth";
 import useRole from "../hooks/useRole";
-import Loader from "../components/Loader";
+import LoadingSpinner from "../components/shared_component/LoadingSpinner";
 
 const BuyerRoute = ({ children }) => {
   const { user, loading } = useAuth();
   const { isBuyer, loading: roleLoading } = useRole();
 
   if (loading || roleLoading) {
-    return <Loader />;
+    return <LoadingSpinner />;
   }
 
   if (user && isBuyer) {

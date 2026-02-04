@@ -64,7 +64,7 @@ const DashboardSidebar = () => {
               Overview
             </h3>
             <NavLink 
-              to="/dashboard/home"
+              to="/dashboard"
               className={({ isActive }) => `
                 flex items-center gap-3
                 px-4 py-3

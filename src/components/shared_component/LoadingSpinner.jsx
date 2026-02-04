@@ -1,12 +1,10 @@
 import React from "react";
 
 const LoadingSpinner = ({ size = 72, variant = "default" }) => {
-  // Default variant - Enhanced rotating coin with particles
   if (variant === "default") {
     return (
-      <div className="flex items-center justify-center w-full py-16">
+      <div className="min-h-screen flex items-center justify-center w-full py-16">
         <div className="relative" style={{ width: size, height: size }}>
-          {/* Outer rotating gradient ring */}
           <svg
             width={size}
             height={size}

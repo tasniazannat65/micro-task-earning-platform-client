@@ -19,6 +19,23 @@ const AuthProvider = ({ children }) => {
   const [dbUser, setDbUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchDbUser = async (email) => {
+    if (!email) return;
+
+    const token = await auth.currentUser.getIdToken();
+
+    const res = await axios.get(
+      `http://localhost:3000/users/${email}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setDbUser(res.data);
+  };
+
   // Register
   const createUser = (email, password) => {
     setLoading(true);
@@ -46,9 +63,10 @@ const AuthProvider = ({ children }) => {
   };
 
   // Logout
-  const signOutUser = () => {
-    setLoading(true);
-    return signOut(auth);
+  const signOutUser = async () => {
+    await signOut(auth);
+    setUser(null);
+    setDbUser(null);
   };
 
   // Observer
@@ -57,18 +75,7 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       if (currentUser?.email) {
-        const token = await currentUser.getIdToken();
-
-        const res = await axios.get(
-          `http://localhost:3000/users/${currentUser.email}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setDbUser(res.data);
+        await fetchDbUser(currentUser.email);
       } else {
         setDbUser(null);
       }
@@ -88,6 +95,7 @@ const AuthProvider = ({ children }) => {
     googleLogin,
     updateUserProfile,
     signOutUser,
+    refetchUser: fetchDbUser, 
   };
 
   return (

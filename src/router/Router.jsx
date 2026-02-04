@@ -6,6 +6,11 @@ import Login from "../pages/authentication/Login";
 import DashboardLayout from "../layouts/DashboardLayout";
 import PrivateRoute from "./privateRoute";
 import DashboardHome from "../pages/dashboard_pages/dashboard_home/DashboardHome";
+import BuyerRoute from "./BuyerRoute";
+import AddTasks from "../pages/dashboard_pages/buyer_pages/AddTasks";
+import MyTasks from "../pages/dashboard_pages/buyer_pages/MyTasks";
+import PurchaseCoin from "../pages/dashboard_pages/buyer_pages/PurchaseCoin";
+import PaymentHistory from "../pages/dashboard_pages/buyer_pages/PaymentHistory";
 
 export const router = createBrowserRouter([
     {
@@ -35,6 +40,30 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 Component: DashboardHome
+            },
+            {
+                path: '/dashboard/buyer/add-task',
+                element: <BuyerRoute>
+                    <AddTasks/>
+                </BuyerRoute>
+            },
+            {
+                path: '/dashboard/buyer/my-tasks',
+                element: <BuyerRoute>
+                    <MyTasks/>
+                </BuyerRoute>
+            },
+            {
+                path: '/dashboard/buyer/purchase-coin',
+                element: <BuyerRoute>
+                    <PurchaseCoin/>
+                </BuyerRoute>
+            },
+            {
+                path: '/dashboard/payment-history',
+                element: <BuyerRoute>
+                    <PaymentHistory/>
+                </BuyerRoute>
             }
         ]
     }

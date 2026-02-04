@@ -1,12 +1,11 @@
 import React from 'react';
 
-const AdminDashboardHome = () => {
+const PaymentHistory = () => {
     return (
         <div>
-            
             
         </div>
     );
 };
 
-export default AdminDashboardHome;
+export default PaymentHistory;
