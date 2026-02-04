@@ -1,9 +1,9 @@
-import React from 'react';
-import { NavLink } from 'react-router';
+import React from "react";
+import { NavLink } from "react-router";
 
 const MyLink = ({ to, children, mobile }) => {
-    return (
-       <NavLink
+  return (
+    <NavLink
       to={to}
       className={({ isActive }) =>
         mobile
@@ -30,11 +30,7 @@ const MyLink = ({ to, children, mobile }) => {
             transition-all
             duration-300
             group
-            ${
-              isActive
-                ? "text-primary"
-                : "text-accent hover:text-primary"
-            }
+            ${isActive ? "text-primary" : "text-accent hover:text-primary"}
           `
       }
     >
@@ -42,7 +38,7 @@ const MyLink = ({ to, children, mobile }) => {
       {!mobile && (
         <>
           <span className="relative z-10">{children}</span>
-          <span 
+          <span
             className={`
               absolute bottom-0 left-0 right-0
               h-0.5
@@ -58,7 +54,7 @@ const MyLink = ({ to, children, mobile }) => {
             `}
           />
           {/* Subtle background on hover */}
-          <span 
+          <span
             className="
               absolute inset-0 
               bg-primary/5 
@@ -73,11 +69,11 @@ const MyLink = ({ to, children, mobile }) => {
           />
         </>
       )}
-      
+
       {/* Mobile Styles - Simple text */}
       {mobile && children}
     </NavLink>
-    );
+  );
 };
 
 export default MyLink;

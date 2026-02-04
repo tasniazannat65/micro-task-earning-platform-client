@@ -8,35 +8,34 @@ const axiosSecure = axios.create({
 });
 
 const useAxiosSecure = () => {
-  const { user, signOutUser } = useAuth();
+  const auth = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const requestInterceptor = axiosSecure.interceptors.request.use(
-      async (config) => {
-        if (user) {
-          const token = await user.getIdToken();
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      }
-    );
+    if (!auth) return;
 
-    const responseInterceptor = axiosSecure.interceptors.response.use(
+    const reqInterceptor = axiosSecure.interceptors.request.use((config) => {
+      if (auth.user?.accessToken) {
+        config.headers.Authorization = `Bearer ${auth.user.accessToken}`;
+      }
+      return config;
+    });
+
+    const resInterceptor = axiosSecure.interceptors.response.use(
       (res) => res,
       (error) => {
-        if (error.response?.status === 401) {
-          signOutUser().then(() => navigate("/login"));
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          auth.signOutUser().then(() => navigate("/login"));
         }
         return Promise.reject(error);
-      }
+      },
     );
 
     return () => {
-      axiosSecure.interceptors.request.eject(requestInterceptor);
-      axiosSecure.interceptors.response.eject(responseInterceptor);
+      axiosSecure.interceptors.request.eject(reqInterceptor);
+      axiosSecure.interceptors.response.eject(resInterceptor);
     };
-  }, [user, signOutUser, navigate]);
+  }, [auth, navigate]);
 
   return axiosSecure;
 };

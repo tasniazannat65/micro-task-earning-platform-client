@@ -3,14 +3,19 @@ import MyLink from './MyLink';
 import { Link } from 'react-router';
 import Container from '../shared_component/Container';
 import { BsMoon, BsSun } from 'react-icons/bs';
+import useAuth from '../../hooks/useAuth';
 
 const Navbar = () => {
+  const { user, dbUser, signOutUser } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+
+
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 px-4 py-4">
@@ -55,16 +60,27 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* Center: Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8">
-            <MyLink to="/">Home</MyLink>
-            <MyLink to="/login">Login</MyLink>
-            <MyLink to="/register">Register</MyLink>
-            <MyLink to="/dashboard">Dashboard</MyLink>
-          </nav>
+         
 
           {/* Right: Desktop Theme + CTA Button */}
           <div className="hidden lg:flex items-center gap-3">
+              <MyLink to="/">Home</MyLink>
+            <MyLink to="/login">Login</MyLink>
+            <MyLink to="/register">Register</MyLink>
+            {user && (
+              <>
+                <MyLink to="/dashboard">Dashboard</MyLink>
+
+                {/* Coins */}
+                <span className="text-sm font-semibold text-secondary">
+                  Coins: {dbUser?.coins}
+                </span>
+              </>
+            )}
+         
+
+            
+          
             {/* Theme Toggle */}
             <button
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -98,6 +114,31 @@ const Navbar = () => {
             >
               Join as Developer
             </a>
+                        {/* Profile */}
+            {user && (
+              <div className="dropdown dropdown-end">
+                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                  <div className="w-10 rounded-full border-2 border-primary">
+                    <img
+                      src={user.photoURL || "https://i.ibb.co/2kRZ5q0/user.png"}
+                      alt="profile"
+                    />
+                  </div>
+                </label>
+
+                <ul
+                  tabIndex={0}
+                  className="menu dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-52"
+                >
+                  <li className="font-semibold">{user.displayName}</li>
+                  <li>
+                    <button onClick={signOutUser} className="text-error">
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -144,10 +185,27 @@ const Navbar = () => {
             backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200
           ">
             <nav className="flex flex-col p-3 gap-2">
-              <MyLink to="/" mobile>Home</MyLink>
-              <MyLink to="/login" mobile>Login</MyLink>
-              <MyLink to="/register" mobile>Register</MyLink>
-              <MyLink to="/dashboard" mobile>Dashboard</MyLink>
+                 {!user && (
+                <>
+                  <MyLink to="/login" mobile>Login</MyLink>
+                  <MyLink to="/register" mobile>Register</MyLink>
+                </>
+              )}
+                {user && (
+                <>
+                  <MyLink to="/dashboard" mobile>Dashboard</MyLink>
+                  <span className="text-sm px-3">
+                  Coins: {dbUser?.coins || 0}
+                  </span>
+                  <button
+                    onClick={signOutUser}
+                    className="btn btn-error btn-sm mt-2"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+
 
               <div className="divider my-2" />
 
@@ -160,6 +218,7 @@ const Navbar = () => {
                 Join as Developer
               </a>
             </nav>
+           
           </div>
 
         </div>

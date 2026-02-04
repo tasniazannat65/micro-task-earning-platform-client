@@ -10,32 +10,34 @@ import {
 import { useEffect, useState } from "react";
 import { auth } from "../firebase/firebase.config";
 import { AuthContext } from "./AuthContext";
+import axios from "axios";
 
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [dbUser, setDbUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  //  Create user
+  // Register
   const createUser = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  //  Login
+  // Login
   const loginUser = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  //  Google Login
+  // Google Login
   const googleLogin = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
-  //  Update profile
+  // Update Profile
   const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
@@ -43,23 +45,43 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  //  Logout
+  // Logout
   const signOutUser = () => {
     setLoading(true);
     return signOut(auth);
   };
 
-  //  Observer
+  // Observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser?.email) {
+        const token = await currentUser.getIdToken();
+
+        const res = await axios.get(
+          `http://localhost:3000/users/${currentUser.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setDbUser(res.data);
+      } else {
+        setDbUser(null);
+      }
+
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
   const authInfo = {
     user,
+    dbUser,
     loading,
     createUser,
     loginUser,
