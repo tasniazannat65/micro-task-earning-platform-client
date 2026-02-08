@@ -1,8 +1,11 @@
 import { Outlet } from "react-router";
 import DashboardSidebar from "../components/dashboard/DashboardSidebar";
-import DashboardTopbar from "../components/dashboard/BashboardTopbar";
+import { useState } from "react";
+import DashboardTopbar from "../components/dashboard/DashboardTopbar";
 
 const DashboardLayout = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 text-base-content relative overflow-hidden">
       {/* Decorative Background */}
@@ -12,13 +15,23 @@ const DashboardLayout = () => {
       </div>
 
       <div className="flex relative z-10">
+         {sidebarOpen && (
+          <div
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          />
+        )}
+
         {/* Sidebar */}
-        <DashboardSidebar />
+        <DashboardSidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+        />
 
         {/* Main Area */}
         <div className="flex-1 flex flex-col min-h-screen">
           {/* Topbar */}
-          <DashboardTopbar />
+          <DashboardTopbar setSidebarOpen={setSidebarOpen} />
 
           {/* Page Content */}
           <main className="flex-1 p-4 md:p-6 lg:p-8">

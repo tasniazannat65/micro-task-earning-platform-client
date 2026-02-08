@@ -1,6 +1,6 @@
 import useAuth from "../../hooks/useAuth";
 
-const DashboardTopbar = () => {
+const DashboardTopbar = ({ setSidebarOpen }) => {
   const { user, dbUser, signOutUser } = useAuth();
 
   return (
@@ -16,6 +16,12 @@ const DashboardTopbar = () => {
         
         {/* Left Section - Coins & Actions */}
         <div className="flex items-center gap-4">
+            <button
+            onClick={() => setSidebarOpen(true)}
+            className="md:hidden btn btn-sm btn-ghost"
+          >
+            ☰
+          </button>
           {/* Coin Balance */}
           <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 shadow-sm hover:shadow-md transition-all duration-300 group">
             <div className="relative">

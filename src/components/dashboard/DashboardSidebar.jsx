@@ -2,20 +2,31 @@ import { Link } from "react-router";
 import { NavLink } from "react-router";
 import useRole from "../../hooks/useRole";
 
-const DashboardSidebar = () => {
+const DashboardSidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const { isAdmin, isWorker, isBuyer } = useRole();
 
   return (
-    <aside className="
-      w-72
-      min-h-screen
-      bg-base-100
-      border-r border-base-300/60
-      hidden md:flex flex-col
-      shadow-xl
-    ">
-      <div className="flex flex-col h-full">
-        
+    <aside   className={`
+    fixed md:static
+    top-0 left-0
+    z-50
+    w-72
+    min-h-screen        
+    bg-base-100
+    border-r border-base-300
+    transform transition-transform duration-300
+    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+    md:translate-x-0
+  `}
+     
+    >
+      <div className="flex flex-col min-h-screen">
+         <button
+        onClick={() => setSidebarOpen(false)}
+        className="absolute top-4 right-4 md:hidden btn btn-sm btn-circle"
+      >
+        ✕
+      </button>
         {/* Logo Section */}
         <div className="p-6 border-b border-base-300/60">
           <Link to={'/'} className="flex items-center gap-3 group">
