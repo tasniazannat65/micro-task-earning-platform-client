@@ -12,6 +12,8 @@ import MyTasks from "../pages/dashboard_pages/buyer_pages/MyTasks";
 import PurchaseCoin from "../pages/dashboard_pages/buyer_pages/PurchaseCoin";
 import PaymentHistory from "../pages/dashboard_pages/buyer_pages/PaymentHistory";
 import PaymentSuccess from "../pages/dashboard_pages/buyer_pages/PaymentSuccess";
+import WorkerRoute from "./WorkerRoute";
+import TaskList from "../pages/dashboard_pages/worker_pages/TaskList";
 
 export const router = createBrowserRouter([
     {
@@ -69,6 +71,12 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/buyer/payment-success',
                 Component: PaymentSuccess
+            },
+            {
+                path: '/dashboard/worker/task-list',
+                element:<WorkerRoute>
+                    <TaskList/>
+                </WorkerRoute>
             }
         ]
     }
