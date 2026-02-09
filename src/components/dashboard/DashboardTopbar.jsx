@@ -1,7 +1,32 @@
+import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const DashboardTopbar = ({ setSidebarOpen }) => {
-  const { user, dbUser, signOutUser } = useAuth();
+const { user, dbUser, fetchDbUser, signOutUser } = useAuth();
+const axiosSecure = useAxiosSecure();
+
+const [notifications, setNotifications] = useState([]);
+const [unreadCount, setUnreadCount] = useState(0);
+const [open, setOpen] = useState(false);
+
+useEffect(() => {
+  if (!user?.email) return;
+
+  const loadNotifications = async () => {
+    const res = await axiosSecure.get("/notifications");
+    setNotifications(res.data.notifications);
+    setUnreadCount(res.data.unreadCount);
+    fetchDbUser(user.email);
+
+  };
+
+  loadNotifications();
+
+  const interval = setInterval(loadNotifications, 5000);
+
+  return () => clearInterval(interval);
+}, [user]);
 
   return (
     <header className="
@@ -80,7 +105,10 @@ const DashboardTopbar = ({ setSidebarOpen }) => {
           
           {/* Notification Bell */}
           <div className="relative group">
-            <button className="
+            <button
+            onClick={() => setOpen(!open)}
+            
+            className="
               relative
               w-11 h-11
               rounded-xl
@@ -106,10 +134,32 @@ const DashboardTopbar = ({ setSidebarOpen }) => {
               </svg>
               
               {/* Notification Badge */}
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-error text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-base-100 animate-pulse">
-                3
-              </span>
+             {unreadCount > 0 && (
+    <span className="absolute -top-1 -right-1 w-5 h-5 bg-error text-white text-xs rounded-full flex items-center justify-center">
+      {unreadCount}
+    </span>
+  )}
             </button>
+      {open && (
+  <div className="absolute right-0 top-14 w-80 bg-base-100 border rounded-xl shadow-xl z-50">
+    {notifications.length === 0 ? (
+      <p className="p-4 text-sm text-center">No notifications</p>
+    ) : (
+      notifications.map((n) => (
+        <div
+          key={n._id}
+          className={`p-3 border-b ${
+            !n.isRead ? "bg-primary/10" : ""
+          }`}
+        >
+          <p className="font-semibold text-sm">{n.title}</p>
+          <p className="text-xs">{n.message}</p>
+        </div>
+      ))
+    )}
+  </div>
+)}
+
 
             {/* Notification Tooltip */}
             <div className="absolute right-0 top-full mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
