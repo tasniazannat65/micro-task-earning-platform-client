@@ -41,23 +41,41 @@ const LoadingSpinner = ({ size = 72, variant = "default" }) => {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative">
               {/* Pulsing glow */}
-              <div className="absolute inset-0 rounded-full bg-primary/30 blur-md animate-pulse" style={{ width: size * 0.4, height: size * 0.4, margin: 'auto' }} />
-              
+              <div
+                className="absolute inset-0 rounded-full bg-primary/30 blur-md animate-pulse"
+                style={{
+                  width: size * 0.4,
+                  height: size * 0.4,
+                  margin: "auto",
+                }}
+              />
+
               {/* Coin circle */}
-              <div 
+              <div
                 className="relative flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary shadow-xl"
                 style={{ width: size * 0.4, height: size * 0.4 }}
               >
-                <span className="text-white font-bold" style={{ fontSize: size * 0.18 }}>$</span>
+                <span
+                  className="text-white font-bold"
+                  style={{ fontSize: size * 0.18 }}
+                >
+                  $
+                </span>
               </div>
             </div>
           </div>
 
           {/* Orbiting particles */}
-          <div className="absolute inset-0 animate-spin" style={{ animationDuration: '3s' }}>
+          <div
+            className="absolute inset-0 animate-spin"
+            style={{ animationDuration: "3s" }}
+          >
             <div className="absolute top-0 left-1/2 w-2 h-2 bg-primary rounded-full -translate-x-1/2 shadow-lg shadow-primary/50" />
           </div>
-          <div className="absolute inset-0 animate-spin" style={{ animationDuration: '2s', animationDirection: 'reverse' }}>
+          <div
+            className="absolute inset-0 animate-spin"
+            style={{ animationDuration: "2s", animationDirection: "reverse" }}
+          >
             <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-secondary rounded-full -translate-x-1/2 shadow-lg shadow-secondary/50" />
           </div>
         </div>
@@ -73,14 +91,25 @@ const LoadingSpinner = ({ size = 72, variant = "default" }) => {
           {/* Multiple pulsing rings */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="absolute w-full h-full rounded-full border-4 border-primary animate-ping opacity-75" />
-            <div className="absolute w-full h-full rounded-full border-4 border-secondary animate-ping opacity-50" style={{ animationDelay: '0.5s' }} />
-            <div className="absolute w-3/4 h-3/4 rounded-full border-4 border-primary animate-ping opacity-25" style={{ animationDelay: '1s' }} />
+            <div
+              className="absolute w-full h-full rounded-full border-4 border-secondary animate-ping opacity-50"
+              style={{ animationDelay: "0.5s" }}
+            />
+            <div
+              className="absolute w-3/4 h-3/4 rounded-full border-4 border-primary animate-ping opacity-25"
+              style={{ animationDelay: "1s" }}
+            />
           </div>
 
           {/* Center icon */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-1/2 h-1/2 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-xl animate-pulse">
-              <div className="text-white font-bold" style={{ fontSize: size * 0.2 }}>$</div>
+              <div
+                className="text-white font-bold"
+                style={{ fontSize: size * 0.2 }}
+              >
+                $
+              </div>
             </div>
           </div>
         </div>
@@ -93,9 +122,18 @@ const LoadingSpinner = ({ size = 72, variant = "default" }) => {
     return (
       <div className="flex items-center justify-center w-full py-16 gap-2">
         <div className="w-3 h-3 rounded-full bg-primary animate-bounce shadow-lg shadow-primary/50" />
-        <div className="w-3 h-3 rounded-full bg-secondary animate-bounce shadow-lg shadow-secondary/50" style={{ animationDelay: '0.1s' }} />
-        <div className="w-3 h-3 rounded-full bg-success animate-bounce shadow-lg shadow-success/50" style={{ animationDelay: '0.2s' }} />
-        <div className="w-3 h-3 rounded-full bg-primary animate-bounce shadow-lg shadow-primary/50" style={{ animationDelay: '0.3s' }} />
+        <div
+          className="w-3 h-3 rounded-full bg-secondary animate-bounce shadow-lg shadow-secondary/50"
+          style={{ animationDelay: "0.1s" }}
+        />
+        <div
+          className="w-3 h-3 rounded-full bg-success animate-bounce shadow-lg shadow-success/50"
+          style={{ animationDelay: "0.2s" }}
+        />
+        <div
+          className="w-3 h-3 rounded-full bg-primary animate-bounce shadow-lg shadow-primary/50"
+          style={{ animationDelay: "0.3s" }}
+        />
       </div>
     );
   }
@@ -111,7 +149,7 @@ const LoadingSpinner = ({ size = 72, variant = "default" }) => {
             style={{
               height: size * 0.6,
               animationDelay: `${i * 0.1}s`,
-              animationDuration: '1s',
+              animationDuration: "1s",
             }}
           />
         ))}
@@ -126,7 +164,10 @@ const LoadingSpinner = ({ size = 72, variant = "default" }) => {
         <div className="relative" style={{ width: size, height: size }}>
           {/* Center coin */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-1/3 h-1/3 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-xl" style={{ fontSize: size * 0.15 }}>
+            <div
+              className="w-1/3 h-1/3 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-xl"
+              style={{ fontSize: size * 0.15 }}
+            >
               $
             </div>
           </div>
@@ -137,7 +178,7 @@ const LoadingSpinner = ({ size = 72, variant = "default" }) => {
               key={i}
               className="absolute inset-0 animate-spin"
               style={{
-                animationDuration: '2s',
+                animationDuration: "2s",
                 animationDelay: `${i * 0.3}s`,
               }}
             >
@@ -177,7 +218,10 @@ const LoadingSpinner = ({ size = 72, variant = "default" }) => {
 
           {/* Center logo */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-primary" style={{ fontSize: size * 0.3, fontWeight: 'bold' }}>
+            <div
+              className="text-primary"
+              style={{ fontSize: size * 0.3, fontWeight: "bold" }}
+            >
               $
             </div>
           </div>

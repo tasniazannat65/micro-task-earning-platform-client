@@ -19,6 +19,7 @@ import MySubmissions from "../pages/dashboard_pages/worker_pages/MySubmissions";
 import WorkerWithdraw from "../pages/dashboard_pages/worker_pages/WorkerWithdraw";
 import AdminRoute from "./AdminRoute";
 import ManageUsers from "../pages/dashboard_pages/admin_pages/ManageUsers";
+import ManageTasks from "../pages/dashboard_pages/admin_pages/ManageTasks";
 
 export const router = createBrowserRouter([
     {
@@ -103,6 +104,12 @@ export const router = createBrowserRouter([
                 path:'/dashboard/admin/manage-users',
                 element: <AdminRoute>
                     <ManageUsers/>
+                </AdminRoute>
+            },
+            {
+                path: '/dashboard/admin/manage-task',
+                element: <AdminRoute>
+                    <ManageTasks/>
                 </AdminRoute>
             }
         ]
