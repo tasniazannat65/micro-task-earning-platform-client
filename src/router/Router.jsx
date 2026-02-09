@@ -17,6 +17,8 @@ import TaskList from "../pages/dashboard_pages/worker_pages/TaskList";
 import TaskDetails from "../pages/dashboard_pages/worker_pages/TaskDetails";
 import MySubmissions from "../pages/dashboard_pages/worker_pages/MySubmissions";
 import WorkerWithdraw from "../pages/dashboard_pages/worker_pages/WorkerWithdraw";
+import AdminRoute from "./AdminRoute";
+import ManageUsers from "../pages/dashboard_pages/admin_pages/ManageUsers";
 
 export const router = createBrowserRouter([
     {
@@ -96,6 +98,12 @@ export const router = createBrowserRouter([
                 element: <WorkerRoute>
                     <WorkerWithdraw/>
                 </WorkerRoute>
+            },
+            {
+                path:'/dashboard/admin/manage-users',
+                element: <AdminRoute>
+                    <ManageUsers/>
+                </AdminRoute>
             }
         ]
     }
