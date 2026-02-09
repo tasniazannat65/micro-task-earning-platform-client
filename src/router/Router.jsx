@@ -15,6 +15,7 @@ import PaymentSuccess from "../pages/dashboard_pages/buyer_pages/PaymentSuccess"
 import WorkerRoute from "./WorkerRoute";
 import TaskList from "../pages/dashboard_pages/worker_pages/TaskList";
 import TaskDetails from "../pages/dashboard_pages/worker_pages/TaskDetails";
+import MySubmissions from "../pages/dashboard_pages/worker_pages/MySubmissions";
 
 export const router = createBrowserRouter([
     {
@@ -82,6 +83,12 @@ export const router = createBrowserRouter([
             {
                 path:'/dashboard/worker/task-details/:id',
                 Component: TaskDetails
+            },
+            {
+                path: '/dashboard/worker/my-submissions',
+                element: <WorkerRoute>
+                    <MySubmissions/>
+                </WorkerRoute>
             }
         ]
     }
