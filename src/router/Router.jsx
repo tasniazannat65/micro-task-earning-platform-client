@@ -16,6 +16,7 @@ import WorkerRoute from "./WorkerRoute";
 import TaskList from "../pages/dashboard_pages/worker_pages/TaskList";
 import TaskDetails from "../pages/dashboard_pages/worker_pages/TaskDetails";
 import MySubmissions from "../pages/dashboard_pages/worker_pages/MySubmissions";
+import WorkerWithdraw from "../pages/dashboard_pages/worker_pages/WorkerWithdraw";
 
 export const router = createBrowserRouter([
     {
@@ -88,6 +89,12 @@ export const router = createBrowserRouter([
                 path: '/dashboard/worker/my-submissions',
                 element: <WorkerRoute>
                     <MySubmissions/>
+                </WorkerRoute>
+            },
+            {
+                path: '/dashboard/worker/withdrawals',
+                element: <WorkerRoute>
+                    <WorkerWithdraw/>
                 </WorkerRoute>
             }
         ]
