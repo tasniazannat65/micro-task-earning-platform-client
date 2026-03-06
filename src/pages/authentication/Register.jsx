@@ -4,11 +4,13 @@ import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import useAxios from "../../hooks/useAxios";
 import GoogleLogin from "./GoogleLogin";
+import { useState } from "react";
 
 const Register = () => {
-  const { createUser, updateUserProfile } = useAuth();
+ const { createUser, updateUserProfile } = useAuth();
   const axiosPublic = useAxios();
   const navigate = useNavigate();
+  const [imageFile, setImageFile] = useState(null);
 
   const {
     register,
@@ -16,17 +18,47 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
+  const uploadImageToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+    if (data.success) return data.data.url;
+    throw new Error("Image upload failed");
+  };
+
   const onSubmit = async (data) => {
-    const { name, email, password, photo, role } = data;
+    const { name, email, password, role } = data;
+
+    if (!imageFile) {
+      toast.error("Please upload a profile photo.");
+      return;
+    }
 
     try {
+      // 1. Upload image to imgBB
+      const photoURL = await uploadImageToImgBB(imageFile);
+
+      // 2. Create Firebase user
       const result = await createUser(email, password);
-      await updateUserProfile(name, photo);
+
+      // 3. Update Firebase profile
+      await updateUserProfile({ displayName: name, photoURL });
+
       const token = await result.user.getIdToken();
 
+      // 4. Save user in your database
       await axiosPublic.post(
         "/users",
-        { name, email, image: photo, role },
+        { name, email, image: photoURL, role },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -36,10 +68,12 @@ const Register = () => {
       if (error.code === "auth/email-already-in-use") {
         toast.error("Email already exists");
       } else {
-        toast.error("Registration failed");
+        toast.error(error.message || "Registration failed");
+        console.error(error);
       }
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-base-200 via-base-100 to-base-200 relative overflow-hidden py-12 px-4">
@@ -170,14 +204,18 @@ const Register = () => {
                     <circle cx="8.5" cy="8.5" r="1.5" />
                     <polyline points="21 15 16 10 5 21" />
                   </svg>
-                  Profile Photo URL
+                  Profile Photo 
                 </span>
               </label>
               <input
-                {...register("photo", { required: "Photo URL is required" })}
+              type="file"
+              
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files[0])}
                 className="input input-bordered w-full bg-base-200 border-base-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                 placeholder="https://example.com/photo.jpg"
               />
+           
               {errors.photo && (
                 <label className="label">
                   <span className="label-text-alt text-error flex items-center gap-1">
@@ -189,6 +227,7 @@ const Register = () => {
                 </label>
               )}
             </div>
+             
 
             {/* Password Field */}
             <div className="form-control">

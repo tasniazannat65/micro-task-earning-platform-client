@@ -19,42 +19,62 @@ const AuthProvider = ({ children }) => {
   const [dbUser, setDbUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Fetch user from DB (SAFE)
   const fetchDbUser = async (email) => {
-    if (!email) return;
+    if (!email || !auth.currentUser) return;
 
-    const token = await auth.currentUser.getIdToken();
+    try {
+      const token = await auth.currentUser.getIdToken();
 
-    const res = await axios.get(
-      `http://localhost:3000/users/${email}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      const res = await axios.get(
+        `http://localhost:3000/users/${email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setDbUser(res.data);
+    } catch (error) {
+      console.warn("DB user not found yet");
+      setDbUser(null);
+    }
+  };
+
+  // 🔹 Register
+  const createUser = async (email, password) => {
+    setLoading(true);
+    const result = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
     );
-
-    setDbUser(res.data);
+    setLoading(false);
+    return result;
   };
 
-  // Register
-  const createUser = (email, password) => {
+  // 🔹 Login
+  const loginUser = async (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
+    const result = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    setLoading(false);
+    return result;
   };
 
-  // Login
-  const loginUser = (email, password) => {
+  // 🔹 Google Login
+  const googleLogin = async () => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
+    const result = await signInWithPopup(auth, googleProvider);
+    setLoading(false);
+    return result;
   };
 
-  // Google Login
-  const googleLogin = () => {
-    setLoading(true);
-    return signInWithPopup(auth, googleProvider);
-  };
-
-  // Update Profile
+  // 🔹 Update Profile
   const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
@@ -62,14 +82,16 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  // Logout
+  // 🔹 Logout
   const signOutUser = async () => {
+    setLoading(true);
     await signOut(auth);
     setUser(null);
     setDbUser(null);
+    setLoading(false);
   };
 
-  // Observer
+  // 🔹 Observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -95,7 +117,7 @@ const AuthProvider = ({ children }) => {
     googleLogin,
     updateUserProfile,
     signOutUser,
-    refetchUser: fetchDbUser, 
+    refetchUser: fetchDbUser,
   };
 
   return (

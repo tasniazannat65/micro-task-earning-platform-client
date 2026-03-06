@@ -3,12 +3,32 @@ import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth";
+import { useState } from "react";
 
 const AddTasks = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const { dbUser, refetchUser, user } = useAuth();
+  const [imageFile, setImageFile] = useState(null);
+
+  // Function to upload image to imgBB
+  const uploadImageToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+    if (data.success) return data.data.url;
+    throw new Error("Image upload failed");
+  };
 
   const onSubmit = async (data) => {
     const requiredWorkers = Number(data.required_workers);
@@ -18,14 +38,21 @@ const AddTasks = () => {
     if (totalPayable > dbUser.coins) {
       Swal.fire({
         icon: "error",
-        title: "Not available Coin",
-        text: "Purchase Coin",
+        title: "Not enough coins",
+        text: "Purchase coins to add this task",
       });
       navigate("/dashboard/buyer/purchase-coin");
       return;
     }
 
     try {
+      // 1️ Upload task image if selected
+      if (imageFile) {
+        const uploadedUrl = await uploadImageToImgBB(imageFile);
+        data.task_image_url = uploadedUrl;
+      }
+
+      // 2️ Submit task to server
       const res = await axiosSecure.post("/tasks", data);
 
       if (res.data.success) {
@@ -37,14 +64,17 @@ const AddTasks = () => {
         });
 
         reset();
+        setImageFile(null);
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: error.response?.data?.message || "Something went wrong",
+        title: error.response?.data?.message || error.message || "Something went wrong",
       });
+      console.error(error);
     }
   };
+
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -262,27 +292,28 @@ const AddTasks = () => {
           </div>
 
           {/* Task Image URL */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold text-accent flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <polyline points="21 15 16 10 5 21" />
-                </svg>
-                Task Image URL
-                <span className="text-neutral/60 text-xs font-normal">(Optional)</span>
-              </span>
-            </label>
-            <input
-              {...register("task_image_url")}
-              className="input input-bordered w-full bg-base-200 border-base-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-              placeholder="https://example.com/image.jpg"
-            />
-            <label className="label">
-              <span className="label-text-alt text-neutral/60">Add a reference image for better understanding</span>
-            </label>
-          </div>
+        
+               <div className="form-control">
+        <label className="label">
+          <span className="label-text font-semibold text-accent flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            Task Image (Optional)
+          </span>
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
+          className="file-input file-input-bordered w-full bg-base-200 border-base-300"
+        />
+        <label className="label">
+          <span className="label-text-alt text-neutral/60">Add a reference image for better understanding</span>
+        </label>
+      </div>
 
           {/* Divider */}
           <div className="divider"></div>

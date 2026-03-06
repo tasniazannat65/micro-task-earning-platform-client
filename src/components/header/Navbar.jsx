@@ -8,14 +8,14 @@ import useAuth from '../../hooks/useAuth';
 const Navbar = () => {
   const { user, dbUser, signOutUser } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-
-
+  const closeMobile = () => setMobileOpen(false);
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 px-4 py-4">
@@ -30,10 +30,11 @@ const Navbar = () => {
           shadow-lg shadow-base-300/20
           transition-all duration-300
           hover:shadow-xl hover:shadow-base-300/30
+          relative
         ">
 
           {/* Left: Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" onClick={closeMobile} className="flex items-center gap-3 group">
             <div className="relative">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -60,27 +61,28 @@ const Navbar = () => {
             </div>
           </Link>
 
-         
-
-          {/* Right: Desktop Theme + CTA Button */}
-          <div className="hidden lg:flex items-center gap-3">
-              <MyLink to="/">Home</MyLink>
-            <MyLink to="/login">Login</MyLink>
-            <MyLink to="/register">Register</MyLink>
-            {user && (
+          {/* Center: Nav Links (Desktop) */}
+          <nav className="hidden lg:flex items-center gap-1">
+            <MyLink to="/">Home</MyLink>
+            {!user && (
               <>
-                <MyLink to="/dashboard">Dashboard</MyLink>
-
-                {/* Coins */}
-                <span className="text-sm font-semibold text-secondary">
-                  Coins: {dbUser?.coins}
-                </span>
+                <MyLink to="/login">Login</MyLink>
+                <MyLink to="/register">Register</MyLink>
               </>
             )}
-         
+            {user && (
+              <MyLink to="/dashboard">Dashboard</MyLink>
+            )}
+          </nav>
 
-            
-          
+          {/* Right: Controls (Desktop) */}
+          <div className="hidden lg:flex items-center gap-3">
+            {user && (
+              <span className="text-sm font-semibold text-secondary">
+                Coins: {dbUser?.coins}
+              </span>
+            )}
+
             {/* Theme Toggle */}
             <button
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -114,7 +116,8 @@ const Navbar = () => {
             >
               Join as Developer
             </a>
-                        {/* Profile */}
+
+            {/* Profile Dropdown */}
             {user && (
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -125,7 +128,6 @@ const Navbar = () => {
                     />
                   </div>
                 </label>
-
                 <ul
                   tabIndex={0}
                   className="menu dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-52"
@@ -141,9 +143,8 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile: Theme + Hamburger */}
           <div className="lg:hidden flex items-center gap-2">
-            {/* Theme Toggle Mobile */}
             <button
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
               className="btn btn-ghost btn-circle hover:bg-base-200 active:bg-base-300 transition-all duration-200"
@@ -156,70 +157,82 @@ const Navbar = () => {
               )}
             </button>
 
-            {/* Hamburger */}
-            <label htmlFor="mobile-menu" className="
-              btn btn-ghost btn-circle
-              hover:bg-base-200
-              active:bg-base-300
-              border border-base-300/50
-            ">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-accent"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
-              </svg>
-            </label>
-
-            {/* Hidden Checkbox for Menu */}
-            <input type="checkbox" id="mobile-menu" className="hidden peer" />
+            {/* Hamburger Button */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="btn btn-ghost btn-circle hover:bg-base-200 active:bg-base-300 border border-base-300/50"
+              aria-label="Toggle Menu"
+            >
+              {mobileOpen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+              )}
+            </button>
           </div>
 
           {/* Mobile Dropdown */}
-          <div className="
-            hidden peer-checked:flex flex-col absolute right-4 top-20 w-64 rounded-2xl
-            bg-base-100 border border-base-300/60 shadow-2xl shadow-base-300/30
-            backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200
-          ">
-            <nav className="flex flex-col p-3 gap-2">
-                 {!user && (
-                <>
-                  <MyLink to="/login" mobile>Login</MyLink>
-                  <MyLink to="/register" mobile>Register</MyLink>
-                </>
-              )}
+          {mobileOpen && (
+            <div className="
+              lg:hidden
+              flex flex-col
+              absolute right-4 top-20 w-64 rounded-2xl
+              bg-base-100 border border-base-300/60
+              shadow-2xl shadow-base-300/30
+              backdrop-blur-xl overflow-hidden
+              z-50
+            ">
+              <nav className="flex flex-col p-3 gap-2">
+                <Link to="/" onClick={closeMobile} className="px-3 py-2 rounded-xl hover:bg-base-200 transition-colors font-medium">
+                  Home
+                </Link>
+
+                {!user && (
+                  <>
+                    <Link to="/login" onClick={closeMobile} className="px-3 py-2 rounded-xl hover:bg-base-200 transition-colors font-medium">
+                      Login
+                    </Link>
+                    <Link to="/register" onClick={closeMobile} className="px-3 py-2 rounded-xl hover:bg-base-200 transition-colors font-medium">
+                      Register
+                    </Link>
+                  </>
+                )}
+
                 {user && (
-                <>
-                  <MyLink to="/dashboard" mobile>Dashboard</MyLink>
-                  <span className="text-sm px-3">
-                  Coins: {dbUser?.coins || 0}
-                  </span>
-                  <button
-                    onClick={signOutUser}
-                    className="btn btn-error btn-sm mt-2"
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
+                  <>
+                    <Link to="/dashboard" onClick={closeMobile} className="px-3 py-2 rounded-xl hover:bg-base-200 transition-colors font-medium">
+                      Dashboard
+                    </Link>
+                    <span className="text-sm px-3 font-semibold text-secondary">
+                      Coins: {dbUser?.coins || 0}
+                    </span>
+                    <button
+                      onClick={() => { signOutUser(); closeMobile(); }}
+                      className="btn btn-error btn-sm mt-2"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
 
+                <div className="divider my-1" />
 
-              <div className="divider my-2" />
-
-              <a
-                href="https://github.com/tasniazannat65/micro-task-earning-platform-client.git"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-center gap-2 text-sm font-semibold px-4 py-3 rounded-xl bg-primary text-base-100 hover:bg-secondary transition-colors duration-200 shadow-md shadow-primary/30"
-              >
-                Join as Developer
-              </a>
-            </nav>
-           
-          </div>
+                <a
+                  href="https://github.com/tasniazannat65/micro-task-earning-platform-client.git"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={closeMobile}
+                  className="flex items-center justify-center gap-2 text-sm font-semibold px-4 py-3 rounded-xl bg-primary text-base-100 hover:bg-secondary transition-colors duration-200 shadow-md shadow-primary/30"
+                >
+                  Join as Developer
+                </a>
+              </nav>
+            </div>
+          )}
 
         </div>
       </Container>

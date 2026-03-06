@@ -282,15 +282,15 @@ const Footer = () => {
 
               {/* Quick Links */}
               <div className="flex items-center gap-6 text-neutral/70">
-                <a href="#" className="hover:text-primary transition-colors">
+                <Link to={'/terms'} className="hover:text-primary transition-colors">
                   Terms
-                </a>
-                <a href="#" className="hover:text-primary transition-colors">
+                </Link>
+                <Link to={'/privacy'} className="hover:text-primary transition-colors">
                   Privacy
-                </a>
-                <a href="#" className="hover:text-primary transition-colors">
+                </Link>
+                <Link to={'/cookies'} className="hover:text-primary transition-colors">
                   Cookies
-                </a>
+                </Link>
               </div>
             </div>
           </div>

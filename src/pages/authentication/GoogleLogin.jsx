@@ -1,38 +1,34 @@
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router";
-import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
-import useAxios from "../../hooks/useAxios";
+import axios from "axios";
 
 const GoogleLogin = () => {
-  const { googleLogin } = useAuth();
-  const axiosPublic = useAxios();
+  const { googleLogin, refetchUser } = useAuth();
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     try {
       const result = await googleLogin();
-      const token = await result.user.getIdToken();
+      const user = result.user;
 
-      await axiosPublic.post(
-        "/users",
-        {
-          name: result.user.displayName,
-          email: result.user.email,
-          image: result.user.photoURL,
-          role: "Worker",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const saveUser = {
+        display_name: user.displayName,
+        email: user.email,
+        photo_url: user.photoURL,
+        role: "worker", // default role
+        coin: 0,
+      };
 
-      toast.success("Logged in with Google 🎉");
+      //  Save user to DB (if not exists)
+      await axios.post("http://localhost:3000/users", saveUser);
+
+      //  Fetch DB user
+      await refetchUser(user.email);
+
       navigate("/dashboard");
     } catch (error) {
-      toast.error("Google login failed");
+      console.error("Google login failed:", error);
     }
   };
 

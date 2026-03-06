@@ -20,15 +20,33 @@ import WorkerWithdraw from "../pages/dashboard_pages/worker_pages/WorkerWithdraw
 import AdminRoute from "./AdminRoute";
 import ManageUsers from "../pages/dashboard_pages/admin_pages/ManageUsers";
 import ManageTasks from "../pages/dashboard_pages/admin_pages/ManageTasks";
+import PageNotFound from "../components/shared_component/PageNotFound";
+import Terms from "../pages/terms/Terms";
+import Privacy from "../pages/privacy/Privacy";
+import Cookies from "../pages/cookies/Cookies";
+import HelpCenter from "../pages/help_center/HelpCenter";
 
 export const router = createBrowserRouter([
     {
         path:'/',
+        errorElement: <PageNotFound/>,
         Component: HomeLayouts,
         children: [
             {
                 index: true,
                 Component: Home
+            },
+            {
+                path:'/terms',
+                Component: Terms
+            },
+            {
+                path: '/privacy',
+                Component: Privacy
+            },
+            {
+                path: '/cookies',
+                Component: Cookies
             }
         ]
     },
@@ -111,6 +129,10 @@ export const router = createBrowserRouter([
                 element: <AdminRoute>
                     <ManageTasks/>
                 </AdminRoute>
+            },
+            {
+                path:'/dashboard/help-center',
+                Component: HelpCenter
             }
         ]
     }

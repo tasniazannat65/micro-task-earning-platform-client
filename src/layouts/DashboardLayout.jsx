@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Link, Outlet } from "react-router";
 import DashboardSidebar from "../components/dashboard/DashboardSidebar";
 import { useState } from "react";
 import DashboardTopbar from "../components/dashboard/DashboardTopbar";
@@ -53,15 +53,15 @@ const DashboardLayout = () => {
 
                 {/* Footer Links */}
                 <div className="flex items-center gap-6 text-xs text-neutral/70">
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link to={'/dashboard/help-center'} className="hover:text-primary transition-colors">
                     Help Center
-                  </a>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  </Link>
+                  <Link to={'/privacy'} className="hover:text-primary transition-colors">
                     Privacy
-                  </a>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  </Link>
+                  <Link to={'/terms'} className="hover:text-primary transition-colors">
                     Terms
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Version */}

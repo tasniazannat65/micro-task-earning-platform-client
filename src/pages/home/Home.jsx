@@ -5,12 +5,16 @@ import EarningOpportunities from '../../components/home/earning_section/EarningO
 import WalletFlow from '../../components/home/wallet_section/WalletFlow';
 import PlatformFor from '../../components/home/platform_section/PlatformFor';
 import TaskCategories from '../../components/home/task_section/TaskCategories';
+import BestWorkers from '../../components/home/best_workers/BestWorkers';
 
 const Home = () => {
     return (
         <div>
             <section>
                 <Banner/>
+            </section>
+            <section>
+                <BestWorkers/>
             </section>
             <section>
                 <Testimonials/>
