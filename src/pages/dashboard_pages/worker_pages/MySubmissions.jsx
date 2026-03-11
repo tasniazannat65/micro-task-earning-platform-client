@@ -12,7 +12,7 @@ const MySubmissions = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const limit = 10; // Number of submissions per page
+  const limit = 5; // Number of submissions per page
 
   const fetchSubmissions = async (page = 1) => {
     if (!user?.email) return;
@@ -201,7 +201,8 @@ const MySubmissions = () => {
                     </div>
                   </td>
                   <td className="text-neutral">
-                    {new Date(sub.createdAt).toLocaleDateString('en-US', {
+                    {new Date(sub.
+submission_date).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric'

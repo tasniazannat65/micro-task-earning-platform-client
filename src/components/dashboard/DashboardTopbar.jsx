@@ -3,7 +3,7 @@ import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const DashboardTopbar = ({ setSidebarOpen }) => {
-const { user, dbUser, fetchDbUser, signOutUser } = useAuth();
+const { user, dbUser, refetchUser, signOutUser } = useAuth();
 const axiosSecure = useAxiosSecure();
 
 const [notifications, setNotifications] = useState([]);
@@ -15,10 +15,11 @@ useEffect(() => {
 
   const loadNotifications = async () => {
     const res = await axiosSecure.get("/notifications");
+
     setNotifications(res.data.notifications);
     setUnreadCount(res.data.unreadCount);
-    fetchDbUser(user.email);
 
+    await refetchUser(user.email);
   };
 
   loadNotifications();
@@ -26,7 +27,8 @@ useEffect(() => {
   const interval = setInterval(loadNotifications, 5000);
 
   return () => clearInterval(interval);
-}, [user]);
+
+}, [user, axiosSecure]);
 
   return (
     <header className="

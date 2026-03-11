@@ -1,35 +1,61 @@
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const WorkerWithdraw = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  const coins = user?.coins || 0;
-  const withdrawableDollar = coins / 20;
+  const [workerData, setWorkerData] = useState(null);
 
-  const [withdrawCoin, setWithdrawCoin] = useState(0);
+  const [withdrawCoin, setWithdrawCoin] = useState(200);
   const [paymentSystem, setPaymentSystem] = useState("Bkash");
   const [accountNumber, setAccountNumber] = useState("");
+
+  // fetch worker data
+  useEffect(() => {
+
+    if (user?.email) {
+      axiosSecure.get(`/users/${user.email}`)
+      .then(res => {
+        setWorkerData(res.data);
+      });
+    }
+
+  }, [user, axiosSecure]);
+
+  const coins = workerData?.coins || 0;
+
+  const withdrawableDollar = coins / 20;
 
   const withdrawAmount = withdrawCoin / 20;
 
   const handleWithdraw = async (e) => {
+
     e.preventDefault();
 
     const res = await axiosSecure.post("/worker/withdraw", {
       withdrawal_coin: withdrawCoin,
       payment_system: paymentSystem,
-      account_number: accountNumber,
+      account_number: accountNumber
     });
 
     if (res.data.success) {
-      Swal.fire("Success", "Withdrawal request submitted", "success");
-    }
-  };
 
+      Swal.fire("Success", "Withdrawal request submitted", "success");
+
+      // update UI coin
+      setWorkerData(prev => ({
+        ...prev,
+        coins: prev.coins - withdrawCoin
+      }));
+
+      setWithdrawCoin(200);
+      setAccountNumber("");
+    }
+
+  };
   return (
     <div className="max-w-3xl mx-auto">
       {/* Page Header */}
@@ -225,9 +251,14 @@ const WorkerWithdraw = () => {
                   className="input input-bordered w-full bg-base-200 border-base-300 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
                   value={accountNumber}
                   onChange={(e) => setAccountNumber(e.target.value)}
-                  placeholder={`Enter your ${paymentSystem} account number`}
+                  placeholder={
+    paymentSystem === "Stripe"
+      ? "Enter your Stripe account email"
+      : `Enter your ${paymentSystem} account number`
+  }
                   required
                 />
+    
               </div>
 
               {/* Divider */}

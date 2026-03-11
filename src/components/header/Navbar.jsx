@@ -134,7 +134,7 @@ const Navbar = () => {
                 >
                   <li className="font-semibold">{user.displayName}</li>
                   <li>
-                    <button onClick={signOutUser} className="text-error">
+                    <button onClick={signOutUser} className="text-error btn border-2 bg-base-100 border-primary">
                       Logout
                     </button>
                   </li>

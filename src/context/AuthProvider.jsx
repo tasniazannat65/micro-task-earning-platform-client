@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
   const [dbUser, setDbUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch user from DB (SAFE)
+  //  Fetch user from DB 
   const fetchDbUser = async (email) => {
     if (!email || !auth.currentUser) return;
 
@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
       const token = await auth.currentUser.getIdToken();
 
       const res = await axios.get(
-        `http://localhost:3000/users/${email}`,
+        `${import.meta.env.VITE_API_URL}/users/${email}`, 
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,31 +42,29 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Register
+  //  Refetch user wrapper (instant update)
+  const refetchUser = async () => {
+    if (!auth.currentUser?.email) return;
+    await fetchDbUser(auth.currentUser.email);
+  };
+
+  //  Register
   const createUser = async (email, password) => {
     setLoading(true);
-    const result = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const result = await createUserWithEmailAndPassword(auth, email, password);
     setLoading(false);
     return result;
   };
 
-  // 🔹 Login
+  //  Login
   const loginUser = async (email, password) => {
     setLoading(true);
-    const result = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const result = await signInWithEmailAndPassword(auth, email, password);
     setLoading(false);
     return result;
   };
 
-  // 🔹 Google Login
+  //  Google Login
   const googleLogin = async () => {
     setLoading(true);
     const result = await signInWithPopup(auth, googleProvider);
@@ -74,15 +72,15 @@ const AuthProvider = ({ children }) => {
     return result;
   };
 
-  // 🔹 Update Profile
-  const updateUserProfile = (name, photo) => {
+  //  Update Profile
+  const updateUserProfile = (name, image) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
-      photoURL: photo,
+      photoURL: image,
     });
   };
 
-  // 🔹 Logout
+  //  Logout
   const signOutUser = async () => {
     setLoading(true);
     await signOut(auth);
@@ -91,7 +89,7 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
-  // 🔹 Observer
+  //  Observer for auth state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -108,6 +106,7 @@ const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  // Auth context value
   const authInfo = {
     user,
     dbUser,
@@ -117,14 +116,10 @@ const AuthProvider = ({ children }) => {
     googleLogin,
     updateUserProfile,
     signOutUser,
-    refetchUser: fetchDbUser,
+    refetchUser, 
   };
 
-  return (
-    <AuthContext.Provider value={authInfo}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

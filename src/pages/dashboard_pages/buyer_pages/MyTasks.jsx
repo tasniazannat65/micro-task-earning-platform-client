@@ -12,19 +12,31 @@ const MyTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [totalTasksCount, setTotalTasksCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
 
-  const fetchTasks = async () => {
-    if (!user?.email) return;
+const limit = 5;
 
-    setLoading(true);
-    const res = await axiosSecure.get(`/buyer/tasks/${user.email}`);
-    setTasks(res.data);
-    setLoading(false);
-  };
+const fetchTasks = async () => {
+  if (!user?.email) return;
 
-  useEffect(() => {
-    fetchTasks();
-  }, [user?.email]);
+  setLoading(true);
+
+  const res = await axiosSecure.get(
+    `/buyer/tasks/${user.email}?page=${currentPage}&limit=${limit}`
+  );
+
+  setTasks(res.data.tasks);
+  setTotalPages(res.data.totalPages);
+  setTotalTasksCount(res.data.totalTasks);
+
+  setLoading(false);
+};
+
+useEffect(() => {
+  fetchTasks();
+}, [user?.email, currentPage]);
 
   const handleDelete = async (id) => {
     const confirm = await Swal.fire({
@@ -50,7 +62,7 @@ const MyTasks = () => {
   };
 
   if (loading) return <LoadingSpinner />;
-  const totalTasks = tasks.length;
+const totalTasks = totalTasksCount;
   const totalWorkers = tasks.reduce((sum, task) => sum + task.required_workers, 0);
   const totalPayable = tasks.reduce((sum, task) => sum + (task.required_workers * task.payable_amount), 0);
 
@@ -319,6 +331,86 @@ const MyTasks = () => {
         </div>
       )}
 
+        {/* Pagination */}
+        <div className="border-t border-base-300/60 bg-base-200/50 px-6 py-5">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-neutral">
+              Showing page <span className="font-bold text-accent">{currentPage}</span> of <span className="font-bold text-accent">{totalPages}</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                className="
+                  btn btn-sm
+                  bg-base-100
+                  hover:bg-primary
+                  border border-base-300
+                  hover:border-primary
+                  text-accent
+                  hover:text-white
+                  transition-all duration-300
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                "
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Previous
+              </button>
+
+              <div className="hidden sm:flex items-center gap-1">
+                {[...Array(Math.min(totalPages, 5))].map((_, idx) => {
+                  const pageNum = idx + 1;
+                  return (
+                    <button
+                      key={pageNum}
+                      className={`
+                        w-8 h-8 rounded-lg
+                        font-semibold text-sm
+                        transition-all duration-300
+                        ${currentPage === pageNum 
+                          ? 'bg-primary text-white shadow-md' 
+                          : 'bg-base-100 text-accent hover:bg-base-300 border border-base-300'
+                        }
+                      `}
+                      onClick={() => setCurrentPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                {totalPages > 5 && <span className="text-neutral px-2">...</span>}
+              </div>
+
+              <button
+                className="
+                  btn btn-sm
+                  bg-base-100
+                  hover:bg-primary
+                  border border-base-300
+                  hover:border-primary
+                  text-accent
+                  hover:text-white
+                  transition-all duration-300
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                "
+                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      
+
      {selectedTask && (
     <UpdateTaskModal
       task={selectedTask}
@@ -326,6 +418,7 @@ const MyTasks = () => {
       refetchTasks={fetchTasks} 
     />
   )}
+  
     </div>
   );
 };

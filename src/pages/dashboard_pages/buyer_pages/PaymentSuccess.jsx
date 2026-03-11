@@ -35,7 +35,7 @@ const PaymentSuccess = () => {
         });
         navigate("/dashboard");
       });
-  }, [sessionId]);
+  }, [sessionId, axiosSecure, refetchUser, navigate]);
 
   return null;
 };

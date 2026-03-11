@@ -2,10 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import LoadingSpinner from "../../../components/shared_component/LoadingSpinner";
+import { useState } from "react";
 
 const WorkerDashboardHome = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const [page, setPage] = useState(1);
+const limit = 5;
 
   //  stats
   const { data: stats, isLoading } = useQuery({
@@ -20,18 +23,20 @@ const WorkerDashboardHome = () => {
   });
 
   //  approved submissions
-  const { data: approvedSubmissions = [] } = useQuery({
-    queryKey: ["approvedSubmissions", user?.email],
-    enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/worker/approved-submissions/${user.email}`
-      );
-      return res.data;
-    },
-  });
+ const { data: approvedData = {}, isLoading: submissionsLoading } = useQuery({
+  queryKey: ["approvedSubmissions", user?.email, page],
+  enabled: !!user?.email,
+  queryFn: async () => {
+    const res = await axiosSecure.get(
+      `/worker/approved-submissions/${user.email}?page=${page}&limit=${limit}`
+    );
+    return res.data;
+  },
+});
+const approvedSubmissions = approvedData?.submissions || [];
+const totalPages = approvedData?.totalPages || 1;
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading || submissionsLoading) return <LoadingSpinner />;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -238,7 +243,88 @@ const WorkerDashboardHome = () => {
             </div>
           </>
         )}
+         {/* Pagination */}
+        <div className="border-t border-base-300/60 bg-base-200/50 px-6 py-5">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-neutral">
+              Showing page <span className="font-bold text-accent">{page}</span> of <span className="font-bold text-accent">{totalPages}</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                className="
+                  btn btn-sm
+                  bg-base-100
+                  hover:bg-primary
+                  border border-base-300
+                  hover:border-primary
+                  text-accent
+                  hover:text-white
+                  transition-all duration-300
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                "
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Previous
+              </button>
+
+              <div className="hidden sm:flex items-center gap-1">
+                {[...Array(Math.min(totalPages, 5))].map((_, idx) => {
+                  const pageNum = idx + 1;
+                  return (
+                    <button
+                      key={pageNum}
+                      className={`
+                        w-8 h-8 rounded-lg
+                        font-semibold text-sm
+                        transition-all duration-300
+                        ${page === pageNum 
+                          ? 'bg-primary text-white shadow-md' 
+                          : 'bg-base-100 text-accent hover:bg-base-300 border border-base-300'
+                        }
+                      `}
+                      onClick={() => setPage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+                {totalPages > 5 && <span className="text-neutral px-2">...</span>}
+              </div>
+
+              <button
+                className="
+                  btn btn-sm
+                  bg-base-100
+                  hover:bg-primary
+                  border border-base-300
+                  hover:border-primary
+                  text-accent
+                  hover:text-white
+                  transition-all duration-300
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                "
+                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                disabled={page === totalPages}
+              >
+                Next
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+   
       </div>
+     
     </div>
   );
 };

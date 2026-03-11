@@ -36,7 +36,7 @@ const Register = () => {
   };
 
   const onSubmit = async (data) => {
-    const { name, email, password, role } = data;
+    const { name, email, password, role} = data;
 
     if (!imageFile) {
       toast.error("Please upload a profile photo.");
@@ -51,8 +51,7 @@ const Register = () => {
       const result = await createUser(email, password);
 
       // 3. Update Firebase profile
-      await updateUserProfile({ displayName: name, photoURL });
-
+     await updateUserProfile(name, photoURL);
       const token = await result.user.getIdToken();
 
       // 4. Save user in your database
