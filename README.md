@@ -42,7 +42,7 @@ Zentaskly is a full-stack MERN-based micro-tasking platform where users can earn
 
 ### 🏠 Home Page
 
-![Home Page](./screenshots/home.png)
+![Home Page](./src/assets/screenshots/home.png)
 
 
 ---
