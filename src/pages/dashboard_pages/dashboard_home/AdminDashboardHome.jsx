@@ -48,6 +48,8 @@ const totalPages = withdrawData?.totalPages || 0;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
+            <title>Zantaskly || Admin Dashboard Home Page </title>
+
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-2">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg">

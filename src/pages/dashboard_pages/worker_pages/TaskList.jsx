@@ -67,6 +67,8 @@ const [totalPages, setTotalPages] = useState(1);
 
   return (
     <div className="max-w-7xl mx-auto">
+            <title>Zantaskly || Task List Page </title>
+
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">

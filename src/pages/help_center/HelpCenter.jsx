@@ -33,6 +33,8 @@ export default function HelpCenter() {
 
   return (
     <div className="min-h-screen  text-base-content p-6">
+            <title>Zantaskly || Help Center Page </title>
+
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div

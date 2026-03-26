@@ -4,6 +4,8 @@ import Container from '../../components/shared_component/Container';
 const Cookies = () => {
     return (
        <div className="min-h-screen  text-base-content  py-12">
+              <title>Zantaskly || Cookies Page </title>
+
 <Container>
 <h1 className="text-5xl font-bold text-primary mb-6">🍪 Cookies Policy</h1>
 

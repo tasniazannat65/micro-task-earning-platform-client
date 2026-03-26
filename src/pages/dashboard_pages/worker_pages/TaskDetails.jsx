@@ -53,6 +53,8 @@ const TaskDetails = () => {
   if (!task) {
     return (
       <div className="max-w-3xl mx-auto">
+              <title>Zantaskly || Task Details Page </title>
+
         <div className="bg-base-100 rounded-xl border-2 border-error/60 shadow-xl p-12 text-center">
           <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-error/10 flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -78,6 +78,8 @@ const AddTasks = () => {
 
   return (
     <div className="max-w-5xl mx-auto">
+            <title>Zantaskly || Add Task Page </title>
+
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">

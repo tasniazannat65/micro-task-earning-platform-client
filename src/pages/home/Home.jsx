@@ -10,6 +10,8 @@ import BestWorkers from '../../components/home/best_workers/BestWorkers';
 const Home = () => {
     return (
         <div>
+                  <title>Zantaskly || Home Page </title>
+
             <section>
                 <Banner/>
             </section>

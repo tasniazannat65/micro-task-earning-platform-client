@@ -4,6 +4,8 @@ import Container from '../../components/shared_component/Container';
 const Terms = () => {
     return (
         <div className="min-h-screen  text-base-content  py-12">
+                  <title>Zantaskly || Terms Page </title>
+
 <Container>
 <h1 className="text-5xl font-bold text-primary mb-6">📜 Terms & Conditions</h1>
 

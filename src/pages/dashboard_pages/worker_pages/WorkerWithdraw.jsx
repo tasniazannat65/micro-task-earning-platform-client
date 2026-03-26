@@ -58,6 +58,8 @@ const WorkerWithdraw = () => {
   };
   return (
     <div className="max-w-3xl mx-auto">
+            <title>Zantaskly || Coins Withdraw Page </title>
+
       {/* Page Header */}
       <div className="flex items-center gap-3 mb-8">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-success to-secondary flex items-center justify-center shadow-lg">

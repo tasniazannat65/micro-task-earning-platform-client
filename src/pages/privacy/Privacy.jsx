@@ -4,6 +4,8 @@ import Container from '../../components/shared_component/Container';
 const Privacy = () => {
     return (
       <div className="min-h-screen  text-base-content  py-12">
+              <title>Zantaskly || Privacy Page </title>
+
 <Container>
 <h1 className="text-5xl font-bold text-primary mb-6">🔒 Privacy Policy</h1>
 
