@@ -18,7 +18,6 @@ const TaskDetails = () => {
       try {
         const res = await axiosSecure.get(`/worker/task-details/${id}`);
         setTask(res.data);
-        console.log('data', res.data)
         setLoading(false);
       } catch (error) {
         console.error(error);

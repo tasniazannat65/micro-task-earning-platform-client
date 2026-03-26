@@ -21,7 +21,7 @@ const GoogleLogin = () => {
       };
 
       //  Save user to DB (if not exists)
-      await axios.post("http://localhost:3000/users", saveUser);
+      await axios.post("https://zantaskly-earning-platform.vercel.app/users", saveUser);
 
       //  Fetch DB user
       await refetchUser(user.email);

@@ -23,7 +23,7 @@ const ManageUsers = () => {
       setTotalUsers(res.data.totalUsers);
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
